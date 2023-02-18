@@ -1,0 +1,35 @@
+name: Mcsu
+version: 'v 3.alpha.1'
+main: com.cak.mcsu.Main
+api-version: 1.19
+commands:
+  listgames:
+    description: Lists all games and ids
+    usage: /listgames
+  listmaps:
+    description: Lists all maps and ids
+    usage: /listmaps
+  listteams:
+    description: Lists all teams and ids
+    usage: /listteams
+  listworlds:
+    description: Lists all worlds in devworlds
+    usage: /listworlds
+
+  startgame:
+    description: Starts game
+    usage: /startgame <gameId>
+
+  team:
+    description: Team related commands
+    usage: /team [set <player> <teamId> | points [set <number> | clear]]
+
+  editor:
+    description: Opens map editor on a specified map
+    usage: /editor [open | new | save] <map name>
+  showpoints:
+    description: Displays all spawnpoints and lobby points in map editor
+    usage: /showpoints
+  hidepoints:
+    description: Hides all spawnpoints and lobby points in map editor
+    usage: /hidepoints
