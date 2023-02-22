@@ -3,6 +3,9 @@ package com.cak.mcsu.core.eventhandler;
 public enum ActivityRule {
     TILE_DROP(false),
     TILE_BREAKING(false),
+    TILE_PLACING(false),
+    DROP_ITEMS(false),
+    REPLENISH_BLOCKS(false),
     EXPLOSION_DAMAGE(false),
     SUFFOCATION(false),
     EXPLOSION_GRIEFING(false),

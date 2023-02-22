@@ -1,16 +1,16 @@
-package com.cak.mcsu.games;
+package com.cak.mcsu.base.games;
 
+import com.cak.mcsu.base.players.BlockSumoPlayer;
 import com.cak.mcsu.core.eventhandler.ActivityRule;
 import com.cak.mcsu.core.game.ActiveGame;
 import com.cak.mcsu.core.game.Game;
 import com.cak.mcsu.core.game.GameState;
-import com.cak.mcsu.core.game.functionhelper.BuildLimitBypass;
-import com.cak.mcsu.core.game.functions.BuildHeight;
-import com.cak.mcsu.core.game.functions.BuildRange;
-import com.cak.mcsu.core.game.functions.EventListener;
-import com.cak.mcsu.core.game.functions.HeightZone;
+import com.cak.mcsu.core.game.functions.*;
+import com.cak.mcsu.core.game.helpers.BuildLimitBypass;
+import com.cak.mcsu.core.scoreboard.PlayerScoreboard;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.event.Listener;
 
 import java.util.Arrays;
 
@@ -18,12 +18,20 @@ public class BlockSumo {
 
     static Game game = new Game("blocksumo", "Block Sumo");
 
+    static GamePlayerHelper<BlockSumoPlayer> playerHelper;
+
     public static void register() {
 
+        game.addPrefixProvider(player -> {
+            BlockSumoPlayer blockSumoPlayer = playerHelper.getPlayer(player);
+            return (blockSumoPlayer == null ? Component.text("") : blockSumoPlayer.getLivesTabString());
+        });
         game.addGameState(new GameState("Base", true)
                 .setOnEnable(()->{
                     ActivityRule.setEnabled(
-                            ActivityRule.TILE_BREAKING, false,
+                            ActivityRule.TILE_BREAKING, true,
+                            ActivityRule.TILE_PLACING, true,
+                            ActivityRule.REPLENISH_BLOCKS, true,
                             ActivityRule.TILE_DROP, false
                     );
 
@@ -39,36 +47,45 @@ public class BlockSumo {
                     //Tp players falling off to platform
                     HeightZone lobbyHeightZone = new HeightZone(killHeight);
 
-                    lobbyHeightZone.setOnEnter(player -> player.teleport(
+                    lobbyHeightZone.setOnInside(player -> player.teleport(
                             ActiveGame.getGameMap().getLobbySpawns()[0]
                                     .toBukkitPosition(ActiveGame.getWorld())
                     ));
 
-                    game.getGameState("Lobby").addGameFunction(lobbyHeightZone);
+                    game.getLobbyGameState().addGameFunction(lobbyHeightZone);
 
                     //Setup active state for players falling off
                     HeightZone activeHeightZone = new HeightZone(killHeight);
-                    activeHeightZone.setOnEnter(player -> player.setHealth(0));
+                    activeHeightZone.setOnInside(player -> player.setHealth(0));
+
                     BuildLimitBypass buildLimitBypass = placeEvent -> placeEvent.getBlock().getType() == Material.TNT;
 
-                    game.getGameState("Active")
+                    game.getActiveGameState()
                             .addGameFunctions(
                                     activeHeightZone,
                                     new BuildRange(buildOrigin, buildRange, buildLimitBypass),
-                                    new BuildHeight(buildMaxHeight, buildLimitBypass)
+                                    new BuildHeight(buildMaxHeight, buildLimitBypass),
+                                    new TaskInterval(() -> {
+                                        for (BlockSumoPlayer player : playerHelper.getPlayers()) {
+                                            player.getPlayer().toBukkit().sendActionBar(player.getLivesPrefix());
+                                        }
+                                    }, 20L, 20L)
                             );
+                    Bukkit.getLogger().info(String.valueOf(killHeight));
                 })
+                .addGameFunctions(
+                        new MapProtection()
+                )
         );
 
         game.setLobbyGameState(new GameState("Lobby")
         );
         game.setActiveGameState(new GameState("Active")
-                .addGameFunctions(new EventListener(new Listener() {
-                     /*@EventHandler
-                     public void onPlayerMove(PlayerMoveEvent moveEvent) {
-                         Debug.log("asgfgadfibhjl");
-                     }*/
-                }))
+                .setOnEnable(() -> playerHelper.getPlayers().forEach(blockSumoPlayer ->
+                        PlayerScoreboard.getScoreboard(blockSumoPlayer.getPlayer()).updateGamePrefix()))
+                .addGameFunctions(
+                        playerHelper = new GamePlayerHelper<>(BlockSumoPlayer::new)
+                )
         );
 
     }

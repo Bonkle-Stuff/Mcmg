@@ -1,7 +1,8 @@
 package com.cak.mcsu.core.game;
 
 import com.cak.mcsu.core.Debug;
-import com.cak.mcsu.games.BlockSumo;
+import com.cak.mcsu.base.games.BlockSumo;
+import com.cak.mcsu.core.scoreboard.PrefixProvider;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class Game {
     ArrayList<GameState> gameStates = new ArrayList<>();
     GameState lobbyGameState;
     GameState activeGameState;
+    PrefixProvider gamePrefixProvider;
 
     final String id;
     final String name;
@@ -73,4 +75,11 @@ public class Game {
         return name;
     }
 
+    public void addPrefixProvider(PrefixProvider gamePrefixProvider) {
+        this.gamePrefixProvider = gamePrefixProvider;
+    }
+
+    public PrefixProvider getGamePrefixProvider() {
+        return gamePrefixProvider;
+    }
 }

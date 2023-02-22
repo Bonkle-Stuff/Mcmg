@@ -26,8 +26,8 @@ public class PlayerScoreboard {
     Team playerTeam;
 
     //Result is cached for performance (maybe?)
-    Supplier<String> teamPrefixProvider; String teamPrefixLast = "";
-    @Nullable Supplier<String> gamePrefixProvider; String gamePrefixLast = "";
+    static Supplier<String> teamPrefixProvider; String teamPrefixLast = "";
+    @Nullable static PrefixProvider gamePrefixProvider; Component gamePrefixLast = Component.text("");
 
     public PlayerScoreboard(Player bukkitPlayer) {
 
@@ -55,7 +55,6 @@ public class PlayerScoreboard {
                 player.getTeam().getChatColor()));
 
         bukkitPlayer.setScoreboard(scoreboard);
-        Bukkit.getLogger().info(bukkitPlayer.getScoreboard().toString());
 
         playerScoreboards.put(player, this);
 
@@ -91,25 +90,25 @@ public class PlayerScoreboard {
         return playerScoreboards.get(player);
     }
 
-    public void setGamePrefixProvider(@Nullable Supplier<String> gamePrefixProvider) {
-        this.gamePrefixProvider = gamePrefixProvider;
-        updateGamePrefix();
+    public static void setGamePrefixProvider(@Nullable PrefixProvider gamePrefixProvider) {
+        PlayerScoreboard.gamePrefixProvider = gamePrefixProvider;
+        playerScoreboards.values().forEach(PlayerScoreboard::updateGamePrefix);
     }
 
     public void updateTeamPrefix() {
         teamPrefixLast = teamPrefixProvider.get();
-        playerTeam.prefix(Component.text(getPrefix()));
+        playerTeam.prefix(getPrefix());
         playerTeam.setColor((player.getTeam() == null ? ChatColor.GRAY :
                 player.getTeam().getChatColor()));
     }
 
     public void updateGamePrefix() {
-        gamePrefixLast = gamePrefixProvider == null ? "" : gamePrefixProvider.get();
-        playerTeam.prefix(Component.text(getPrefix()));
+        gamePrefixLast = gamePrefixProvider == null ? Component.text("") : gamePrefixProvider.get(player);
+        playerTeam.prefix(getPrefix());
     }
 
-    private String getPrefix() {
-        return gamePrefixLast + teamPrefixLast;
+    private Component getPrefix() {
+        return gamePrefixLast.append(Component.text(teamPrefixLast));
     }
 
     /**Generates unique ChatColor combinations for entries*/

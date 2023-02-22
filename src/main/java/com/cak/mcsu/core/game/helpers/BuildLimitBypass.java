@@ -1,4 +1,4 @@
-package com.cak.mcsu.core.game.functionhelper;
+package com.cak.mcsu.core.game.helpers;
 
 import org.bukkit.event.block.BlockPlaceEvent;
 

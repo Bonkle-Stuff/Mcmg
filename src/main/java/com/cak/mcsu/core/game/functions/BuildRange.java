@@ -1,7 +1,7 @@
 package com.cak.mcsu.core.game.functions;
 
 import com.cak.mcsu.core.game.GameFunction;
-import com.cak.mcsu.core.game.functionhelper.BuildLimitBypass;
+import com.cak.mcsu.core.game.helpers.BuildLimitBypass;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;

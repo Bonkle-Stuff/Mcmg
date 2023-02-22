@@ -16,15 +16,13 @@ public class GameFunction {
             onEnabledToggle(enabled);
 
             if (enabled) {
-
                 onEnable();
-                Main.plugin.getServer().getPluginManager().registerEvents(getListener(), Main.plugin);
-
+                if (getListener() != null)
+                    Main.plugin.getServer().getPluginManager().registerEvents(getListener(), Main.plugin);
             } else {
-
                 onDisable();
-                HandlerList.unregisterAll(getListener());
-
+                if (getListener() != null)
+                    HandlerList.unregisterAll(getListener());
             }
 
         }

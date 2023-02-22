@@ -1,7 +1,6 @@
 package com.cak.mcsu.core;
 
 import com.cak.mcsu.Main;
-import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -124,7 +123,6 @@ public class TimedEvent {
      * Returns the ticks left formatted as mm:ss
      */
     public String getTimeLeftString() {
-        Bukkit.getLogger().info(timeLeft + "");
         String sec = timeLeft % 60 +"";
         String min = (int) Math.floor(timeLeft / 60.0) +"";
         return (min.length() > 1 ? "" : "0") + min + ":" + (sec.length() > 1 ? "" : "0") + sec;

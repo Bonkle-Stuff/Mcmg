@@ -6,6 +6,7 @@ import com.cak.mcsu.core.TimedEvent;
 import com.cak.mcsu.core.eventhandler.ActivityRule;
 import com.cak.mcsu.core.map.GameMap;
 import com.cak.mcsu.core.map.MapLoader;
+import com.cak.mcsu.core.scoreboard.PlayerScoreboard;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -17,12 +18,17 @@ import java.util.ArrayList;
 public class ActiveGame {
 
     static ArrayList<McsuPlayer> alivePlayers = new ArrayList<>();
+    static ArrayList<McsuPlayer> players = new ArrayList<>();
     static Game game;
     static GameMap gameMap;
     static World world;
 
     public static ArrayList<McsuPlayer> getAlivePlayers() {
         return alivePlayers;
+    }
+
+    public static ArrayList<McsuPlayer> getPlayers() {
+        return players;
     }
 
     public static void eliminatePlayer(McsuPlayer player) {
@@ -38,6 +44,8 @@ public class ActiveGame {
 
         alivePlayers = new ArrayList<>();
         alivePlayers.addAll(McsuPlayer.players);
+        players = new ArrayList<>();
+        players.addAll(McsuPlayer.players);
 
         ActivityRule.clearAll();
 
@@ -55,6 +63,8 @@ public class ActiveGame {
                 .setOnEnd(()->{
                     Debug.log("Starting game '" + game.getName() + "'");
 
+                    PlayerScoreboard.setGamePrefixProvider(game.getGamePrefixProvider());
+
                     if (lobbyState!=null) {
                         lobbyState.setEnabled(false);
                     }
@@ -67,6 +77,7 @@ public class ActiveGame {
                     if (activeState!=null) {
                         activeState.setEnabled(true);
                     }
+
                 });
 
     }

@@ -32,6 +32,7 @@ public class GameCountdown implements ScoreboardWidget {
     public int update(McsuPlayer player, Scoreboard scoreboard, Objective objective, int score) {
 
         String countDown = ActiveGame.getCurrentCountDown();
+
         if (countDown == null) {
             objective.getScore(scoreboardEntry).resetScore();
             objective.getScore(paddingEntry).resetScore();

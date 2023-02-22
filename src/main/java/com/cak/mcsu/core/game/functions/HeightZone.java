@@ -1,6 +1,6 @@
 package com.cak.mcsu.core.game.functions;
 
-import com.cak.mcsu.core.game.functionhelper.ZoneFunction;
+import com.cak.mcsu.core.game.helpers.ZoneFunction;
 
 public class HeightZone extends ZoneFunction {
 
@@ -12,6 +12,6 @@ public class HeightZone extends ZoneFunction {
 
     @Override
     public boolean isInside(double x, double y, double z) {
-        return y < yLevel;
+        return y <= yLevel;
     }
 }

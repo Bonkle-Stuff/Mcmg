@@ -7,23 +7,22 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import java.util.HashMap;
 import java.util.UUID;
 
-public class McmgEventHandler implements Listener {
+public class ActivityRuleEventHandler implements Listener {
 
     @EventHandler
     public void onBlockBreakEvent(BlockBreakEvent event) {
 
-        if (!ActivityRule.TILE_BREAKING.isEnabled()) {
-            event.setCancelled(true);
-        } else if (!ActivityRule.TILE_DROP.isEnabled()) {
-            event.setDropItems(false);
-        }
+        event.setCancelled(!ActivityRule.TILE_BREAKING.isEnabled());
+        event.setDropItems(!ActivityRule.TILE_DROP.isEnabled());
 
     }
 
@@ -35,6 +34,22 @@ public class McmgEventHandler implements Listener {
         } else if (!ActivityRule.TILE_DROP.isEnabled()) {
             event.setYield(0);
         }
+
+    }
+
+    @EventHandler
+    public void onBlockPlaceEvent(BlockPlaceEvent event) {
+
+        event.setCancelled(!ActivityRule.TILE_PLACING.isEnabled());
+        if (ActivityRule.REPLENISH_BLOCKS.isEnabled())
+            event.getItemInHand().setAmount(event.getItemInHand().getAmount() + 1);
+
+    }
+
+    @EventHandler
+    public void onItemDropEvent(PlayerDropItemEvent event) {
+
+        event.setCancelled(!ActivityRule.DROP_ITEMS.isEnabled());
 
     }
 
@@ -66,7 +81,7 @@ public class McmgEventHandler implements Listener {
 
         Location respawnLocation = respawnLocations.get(event.getPlayer().getUniqueId());
 
-        respawnLocation.setY(Math.min(-60, Math.max(280, respawnLocation.getY())));
+        respawnLocation.setY(Math.min(0, Math.max(280, respawnLocation.getY())));
 
         event.setRespawnLocation(respawnLocation);
 

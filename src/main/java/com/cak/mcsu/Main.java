@@ -6,7 +6,7 @@ import com.cak.mcsu.core.Team;
 import com.cak.mcsu.core.TimedEvent;
 import com.cak.mcsu.core.commands.DevCommands;
 import com.cak.mcsu.core.commands.GameCommands;
-import com.cak.mcsu.core.eventhandler.McmgEventHandler;
+import com.cak.mcsu.core.eventhandler.ActivityRuleEventHandler;
 import com.cak.mcsu.core.game.Game;
 import com.cak.mcsu.core.map.MapConfigLoader;
 import com.cak.mcsu.core.map.MapLoader;
@@ -53,7 +53,7 @@ public final class Main extends JavaPlugin {
         Bukkit.getOnlinePlayers().forEach(McsuPlayer::new);
 
         //Register EventHandlers
-        getServer().getPluginManager().registerEvents(new McmgEventHandler(), this);
+        getServer().getPluginManager().registerEvents(new ActivityRuleEventHandler(), this);
 
         //Initialise components
         Team.loadConfig();

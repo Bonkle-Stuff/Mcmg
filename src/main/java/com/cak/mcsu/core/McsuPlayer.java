@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class McsuPlayer {
 
     public static McsuPlayer fromBukkit(Player player) {
-        return players.stream().filter(candidate -> candidate.bukkitPlayer== player).findFirst().orElse(null);
+        return players.stream().filter(candidate -> candidate.bukkitPlayer == player).findFirst().orElse(null);
     }
 
     public static ArrayList<McsuPlayer> players = new ArrayList<>();
