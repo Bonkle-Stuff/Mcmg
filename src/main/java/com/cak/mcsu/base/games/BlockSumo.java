@@ -30,21 +30,33 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class BlockSumo {
   
-  static Game game = new Game("blocksumo", "Block Sumo");
-  
-  static GamePlayerHelper<BlockSumoPlayer> playerHelper;
-  static LootTable activeLootTable;
+  public BlockSumo() {
+    super("blocksumo", "Block Sumo");
+  }
   
   static int maxPowerups = 5;
   
   static boolean powerupsEnabled = false;
+  static GamePlayerHelper<BlockSumoPlayer> playerHelper;
+  static LootTable activeLootTable;
+  
+  @Override
+  public GameState createPrefixProvider() {
+    return player -> {
+      BlockSumoPlayer blockSumoPlayer = playerHelper.getPlayer(player);
+      return (blockSumoPlayer == null ? Component.text("") : blockSumoPlayer.getLivesTabString());
+    };
+  }
+
+  @Override
+  public GameState createLobbyGameState() {
+
+
+  }
   
   public static void register() {
     
-    game.addPrefixProvider(player -> {
-      BlockSumoPlayer blockSumoPlayer = playerHelper.getPlayer(player);
-      return (blockSumoPlayer == null ? Component.text("") : blockSumoPlayer.getLivesTabString());
-    });
+    game.addPrefixProvider();
     game.addGameState(new GameState("Base", true)
         .setOnEnable(() -> {
           ActivityRule.setEnabled(
