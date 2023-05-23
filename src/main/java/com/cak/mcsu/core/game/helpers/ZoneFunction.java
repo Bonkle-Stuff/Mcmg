@@ -56,8 +56,6 @@ public class ZoneFunction extends GameFunction {
     return listener;
   }
   
-  ;
-  
   public void setOnEnter(Consumer<Player> onEnter) {
     this.onEnter = onEnter;
   }
