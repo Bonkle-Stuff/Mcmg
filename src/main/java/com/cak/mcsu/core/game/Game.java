@@ -8,11 +8,13 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Game {
+public abstract class Game {
   
   public static void registerGames() {
     Debug.log("[Game.registerGames] Registering games:");
     AllGames.register();
+    for (Game game : registeredGames)
+      game.applyRegisteredStates();
     GameState.postRegister = true; //All game functions registered after will be cleared when game resets
   }
 
@@ -26,11 +28,6 @@ public class Game {
   
   public static ArrayList<Game> registeredGames = new ArrayList<>();
   
-  ArrayList<GameState> gameStates = new ArrayList<>();
-  GameState lobbyGameState;
-  GameState activeGameState;
-  PrefixProvider gamePrefixProvider;
-  
   final String id;
   final String name;
   
@@ -42,33 +39,14 @@ public class Game {
     registeredGames.add(this);
   }
   
-  public Game addGameState(GameState gameState) {
-    gameStates.add(gameState);
-    return this;
-  }
-  
-  public Game addGameStates(GameState... gameStates) {
-    for (GameState gameState : gameStates) {
-      addGameState(gameState);
-    }
-    return this;
-  }
-  
   public @Nullable GameState getGameState(String id) {
     return gameStates.stream().filter(gameState -> Objects.equals(gameState.getId(), id)).findFirst().orElse(null);
   }
   
-  public Game setLobbyGameState(GameState lobbyGameState) {
-    addGameState(lobbyGameState);
-    this.lobbyGameState = lobbyGameState;
-    return this;
-  }
-  
-  public Game setActiveGameState(GameState activeGameState) {
-    addGameState(activeGameState);
-    this.activeGameState = activeGameState;
-    return this;
-  }
+  public List<GameState> createGameStates() {return null;}
+  public GameState createLobbyGameState() {return null;}
+  public GameState createActiveGameState() {return null;}
+  public PrefixProvider createPrefixProvider() {return null;}
   
   @Nullable
   public GameState getLobbyGameState() {
@@ -80,6 +58,11 @@ public class Game {
     return activeGameState;
   }
   
+  @Nullable
+  public PrefixProvider getGamePrefixProvider() {
+    return gamePrefixProvider;
+  }
+  
   public String getId() {
     return id;
   }
@@ -87,12 +70,5 @@ public class Game {
   public String getName() {
     return name;
   }
-  
-  public void addPrefixProvider(PrefixProvider gamePrefixProvider) {
-    this.gamePrefixProvider = gamePrefixProvider;
-  }
-  
-  public PrefixProvider getGamePrefixProvider() {
-    return gamePrefixProvider;
-  }
+
 }
