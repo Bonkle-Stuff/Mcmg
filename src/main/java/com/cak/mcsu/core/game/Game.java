@@ -6,6 +6,7 @@ import com.cak.mcsu.core.scoreboard.PrefixProvider;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public abstract class Game {
