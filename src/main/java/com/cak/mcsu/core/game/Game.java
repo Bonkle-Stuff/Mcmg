@@ -14,7 +14,7 @@ public abstract class Game {
     Debug.log("[Game.registerGames] Registering games:");
     AllGames.register();
     for (Game game : registeredGames)
-      game.applyRegisteredStates();
+      game.registerAllComponents();
     GameState.postRegister = true; //All game functions registered after will be cleared when game resets
   }
 
@@ -35,12 +35,30 @@ public abstract class Game {
     this.id = id;
     this.name = name;
     
-    Debug.log("> " + name);
+    Debug.log("> " + name + " (ID: " + id + ")");
     registeredGames.add(this);
   }
   
   public @Nullable GameState getGameState(String id) {
     return gameStates.stream().filter(gameState -> Objects.equals(gameState.getId(), id)).findFirst().orElse(null);
+  }
+  
+  public void registerAllComponents() {
+    
+    lobbyGameState = createLobbyGameState();
+    addGameState(lobbyGameState);
+    activeGameState = createActiveGameState();
+    addGameState(activeGameState);
+    
+    for (GameState gameState : createGameStates())
+      addGameState(gameState);
+    
+    gamePrefixProvider = createPrefixProvider();
+  }
+  
+  protected Game addGameState(GameState gameState) {
+    gameStates.add(gameState);
+    return this;
   }
   
   public List<GameState> createGameStates() {return null;}
