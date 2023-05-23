@@ -15,6 +15,10 @@ public class Game {
     AllGames.register();
     GameState.postRegister = true; //All game functions registered after will be cleared when game resets
   }
+
+  public static void registerGames(Game... games) {
+     registeredGames.addAll(games)
+  }
   
   public static @Nullable Game getGame(String gameId) {
     return registeredGames.stream().filter(game -> Objects.equals(game.id, gameId)).findFirst().orElse(null);
