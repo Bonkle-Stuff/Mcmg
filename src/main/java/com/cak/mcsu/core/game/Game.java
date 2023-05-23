@@ -1,6 +1,6 @@
 package com.cak.mcsu.core.game;
 
-import com.cak.mcsu.base.games.BlockSumo;
+import com.cak.mcsu.base.AllGames;
 import com.cak.mcsu.core.Debug;
 import com.cak.mcsu.core.scoreboard.PrefixProvider;
 
@@ -12,8 +12,7 @@ public class Game {
   
   public static void registerGames() {
     Debug.log("[Game.registerGames] Registering games:");
-    BlockSumo.register();
-    
+    AllGames.register();
     GameState.postRegister = true; //All game functions registered after will be cleared when game resets
   }
   
