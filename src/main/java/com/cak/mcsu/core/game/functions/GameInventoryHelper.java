@@ -3,17 +3,24 @@ package com.cak.mcsu.core.game.functions;
 import com.cak.mcsu.core.McsuPlayer;
 import com.cak.mcsu.core.game.ActiveGame;
 import com.cak.mcsu.core.game.GameFunction;
-import com.cak.mcsu.core.game.GamePlayer;
+import com.cak.mcsu.core.game.GameInventory;
+import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
 
-public class GamePlayerHelper<T extends GamePlayer> extends GameFunction {
+public class GameInventoryHelper<T extends GameInventory> extends GameFunction {
   
   ArrayList<T> players = new ArrayList<>();
-  GamePlayerFactory<T> playerFactory;
+  GameInventoryFactory<T> playerFactory;
+  Listener listener;
   
-  public GamePlayerHelper(GamePlayerFactory<T> playerFactory) {
+  public GameInventoryHelper(GameInventoryFactory<T> playerFactory) {
+    this(playerFactory, null);
+  }
+  
+  public GameInventoryHelper(GameInventoryFactory<T> playerFactory, Listener listener) {
     this.playerFactory = playerFactory;
+    this.listener = listener;
   }
   
   @Override
@@ -23,6 +30,11 @@ public class GamePlayerHelper<T extends GamePlayer> extends GameFunction {
     for (McsuPlayer player : ActiveGame.getPlayers()) {
       players.add(playerFactory.build(player));
     }
+  }
+  
+  @Override
+  public Listener getListener() {
+    return listener;
   }
   
   @Override
@@ -38,7 +50,7 @@ public class GamePlayerHelper<T extends GamePlayer> extends GameFunction {
     return players;
   }
   
-  public static interface GamePlayerFactory<T extends GamePlayer> {
+  public static interface GameInventoryFactory<T extends GameInventory> {
     T build(McsuPlayer player);
   }
 }

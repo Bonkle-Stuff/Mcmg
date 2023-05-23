@@ -9,30 +9,32 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 import java.util.ArrayList;
 
-/**Stop players from breaking the map, but allows player placed blocks (since enable) to be broken*/
+/**
+ * Stop players from breaking the map, but allows player placed blocks (since enable) to be broken
+ */
 public class MapProtection extends GameFunction {
-
-    ArrayList<Location> placedPositions = new ArrayList<>();
-
-    public MapProtection() {
-        this.setListener(new Listener() {
-
-            @EventHandler
-            public void onBlockPlaceEvent(BlockPlaceEvent event) {
-                placedPositions.add(event.getBlock().getLocation());
-            }
-
-            @EventHandler
-            public void onBlockBreakEvent(BlockBreakEvent event) {
-                event.setCancelled(!placedPositions.contains(event.getBlock().getLocation()));
-            }
-
-        });
-    }
-
-    public void onEnable() {
-        placedPositions = new ArrayList<>();
-    }
-
-
+  
+  ArrayList<Location> placedPositions = new ArrayList<>();
+  
+  public MapProtection() {
+    this.setListener(new Listener() {
+      
+      @EventHandler
+      public void onBlockPlaceEvent(BlockPlaceEvent event) {
+        placedPositions.add(event.getBlock().getLocation());
+      }
+      
+      @EventHandler
+      public void onBlockBreakEvent(BlockBreakEvent event) {
+        event.setCancelled(!placedPositions.contains(event.getBlock().getLocation()));
+      }
+      
+    });
+  }
+  
+  public void onEnable() {
+    placedPositions = new ArrayList<>();
+  }
+  
+  
 }

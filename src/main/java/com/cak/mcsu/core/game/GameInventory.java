@@ -2,11 +2,11 @@ package com.cak.mcsu.core.game;
 
 import com.cak.mcsu.core.McsuPlayer;
 
-public class GamePlayer {
+public class GameInventory {
   
   McsuPlayer player;
   
-  public GamePlayer(McsuPlayer player) {
+  public GameInventory(McsuPlayer player) {
     this.player = player;
   }
   
