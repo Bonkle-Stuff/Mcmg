@@ -49,72 +49,8 @@ public class BlockSumo {
   }
 
   @Override
-  public GameState createLobbyGameState() {
-
-
-  }
-  
-  public static void register() {
-    
-    game.addPrefixProvider();
-    game.addGameState(new GameState("Base", true)
-        .setOnEnable(() -> {
-          ActivityRule.setEnabled(
-              ActivityRule.TILE_BREAKING, true,
-              ActivityRule.TILE_PLACING, true,
-              ActivityRule.TILE_DROP, false,
-              ActivityRule.DISABLE_TRAPDOORS, true,
-              ActivityRule.AUTO_IGNITE_TNT, true
-          );
-          
-          //Map GameData
-          double buildRange = ActiveGame.getMapGameData().getDouble("buildRange");
-          double[] buildOrigin = Arrays.stream(
-              ActiveGame.getMapGameData().getString("buildOrigin")
-                  .split(" ")
-          ).mapToDouble(Double::valueOf).toArray();
-          double buildMaxHeight = ActiveGame.getMapGameData().getDouble("buildMaxHeight");
-          double killHeight = ActiveGame.getMapGameData().getDouble("killHeight");
-          
-          //Tp players falling off to platform
-          HeightZone lobbyHeightZone = new HeightZone(killHeight);
-          lobbyHeightZone.setOnInside(player -> player.teleport(
-              ActiveGame.getGameMap().getLobbySpawns()[0]
-                  .toBukkitPosition(ActiveGame.getWorld())
-          ));
-          
-          game.getLobbyGameState()
-              .addGameFunctions(
-                  lobbyHeightZone
-              );
-          
-          //Setup active state for players falling off
-          HeightZone activeHeightZone = new HeightZone(killHeight);
-          activeHeightZone.setOnInside(player -> player.damage(9999));
-          
-          BuildLimitBypass buildLimitBypass = placeEvent -> placeEvent.getBlock().getType() == Material.TNT;
-          
-          game.getActiveGameState()
-              .addGameFunctions(
-                  activeHeightZone,
-                  new BuildRange(buildOrigin, buildRange, buildLimitBypass),
-                  new BuildHeight(buildMaxHeight, buildLimitBypass),
-                  new TaskInterval(() -> {
-                    for (BlockSumoPlayer player : playerHelper.getPlayers()) {
-                      player.getPlayer().toBukkit().sendActionBar(player.getLivesPrefix());
-                    }
-                  }, 20L, 20L)
-              );
-        })
-        .addGameFunctions(
-            new MapProtection(),
-            new BlockReplenishing(blockStack -> blockStack.getType().name().endsWith("_WOOL"))
-        )
-    );
-    
-    game.setLobbyGameState(new GameState("Lobby")
-    );
-    game.setActiveGameState(new GameState("Active")
+  public GameState createActiveGameState() {
+    return new GameState("Active")
         .setOnEnable(() -> {
           playerHelper.getPlayers().forEach(blockSumoPlayer ->
               PlayerScoreboard.getScoreboard(blockSumoPlayer.getPlayer()).updateGamePrefix());
@@ -202,9 +138,64 @@ public class BlockSumo {
                 
               }
             }
-        )
-    );
-    
+       );
   }
+  
+  @Override
+  public List<GameState> createGameStates() {
+return List.of(new GameState("Base", true)
+        .setOnEnable(() -> {
+          ActivityRule.setEnabled(
+              ActivityRule.TILE_BREAKING, true,
+              ActivityRule.TILE_PLACING, true,
+              ActivityRule.TILE_DROP, false,
+              ActivityRule.DISABLE_TRAPDOORS, true,
+              ActivityRule.AUTO_IGNITE_TNT, true
+          );
+          
+          //Map GameData
+          double buildRange = ActiveGame.getMapGameData().getDouble("buildRange");
+          double[] buildOrigin = Arrays.stream(
+              ActiveGame.getMapGameData().getString("buildOrigin")
+                  .split(" ")
+          ).mapToDouble(Double::valueOf).toArray();
+          double buildMaxHeight = ActiveGame.getMapGameData().getDouble("buildMaxHeight");
+          double killHeight = ActiveGame.getMapGameData().getDouble("killHeight");
+          
+          //Tp players falling off to platform
+          HeightZone lobbyHeightZone = new HeightZone(killHeight);
+          lobbyHeightZone.setOnInside(player -> player.teleport(
+              ActiveGame.getGameMap().getLobbySpawns()[0]
+                  .toBukkitPosition(ActiveGame.getWorld())
+          ));
+          
+          game.getLobbyGameState()
+              .addGameFunctions(
+                  lobbyHeightZone
+              );
+          
+          //Setup active state for players falling off
+          HeightZone activeHeightZone = new HeightZone(killHeight);
+          activeHeightZone.setOnInside(player -> player.damage(9999));
+          
+          BuildLimitBypass buildLimitBypass = placeEvent -> placeEvent.getBlock().getType() == Material.TNT;
+          
+          game.getActiveGameState()
+              .addGameFunctions(
+                  activeHeightZone,
+                  new BuildRange(buildOrigin, buildRange, buildLimitBypass),
+                  new BuildHeight(buildMaxHeight, buildLimitBypass),
+                  new TaskInterval(() -> {
+                    for (BlockSumoPlayer player : playerHelper.getPlayers()) {
+                      player.getPlayer().toBukkit().sendActionBar(player.getLivesPrefix());
+                    }
+                  }, 20L, 20L)
+              );
+        })
+        .addGameFunctions(
+            new MapProtection(),
+            new BlockReplenishing(blockStack -> blockStack.getType().name().endsWith("_WOOL"))
+        )
+});
   
 }
