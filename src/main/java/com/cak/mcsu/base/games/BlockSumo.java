@@ -4,7 +4,6 @@ import com.cak.mcsu.base.inventories.BlockSumoInventory;
 import com.cak.mcsu.base.lang.BlockSumoLang;
 import com.cak.mcsu.base.loottables.BlockSumoLoot;
 import com.cak.mcsu.base.players.BlockSumoPlayer;
-import com.cak.mcsu.base.texts.BlockSumoTexts;
 import com.cak.mcsu.core.McsuPlayer;
 import com.cak.mcsu.core.TimedEvent;
 import com.cak.mcsu.core.eventhandler.ActivityRule;
@@ -14,6 +13,7 @@ import com.cak.mcsu.core.game.GameState;
 import com.cak.mcsu.core.game.functions.*;
 import com.cak.mcsu.core.game.helpers.BuildLimitBypass;
 import com.cak.mcsu.core.scoreboard.PlayerScoreboard;
+import com.cak.mcsu.core.scoreboard.PrefixProvider;
 import com.cak.mcsu.core.util.BukkitRunnableLater;
 import com.cak.mcsu.core.util.BukkitRunnableTimer;
 import com.cak.mcsu.core.util.LootTable;
@@ -28,7 +28,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
-public class BlockSumo {
+public class BlockSumo extends Game {
 
   public BlockSumo() {
     super("blocksumo", "Block Sumo");
@@ -41,7 +41,7 @@ public class BlockSumo {
   static LootTable activeLootTable;
 
   @Override
-  public GameState createPrefixProvider() {
+  public PrefixProvider createPrefixProvider() {
     return player -> {
       BlockSumoPlayer blockSumoPlayer = playerHelper.getPlayer(player);
       return (
@@ -79,6 +79,22 @@ public class BlockSumo {
         new TimedEvent("Powerups III", 60 + 300 + 300, true)
           .setOnEnd(() -> {
             activeLootTable = BlockSumoLoot.powerupLootTableIII;
+          });
+        new TimedEvent("Just win already", 60 + 300 + 300 + 60, true)
+          .setOnEnd(() -> {
+            ActivityRule.setEnabled(
+              ActivityRule.EXPLOSION_GRIEFING, true
+            );
+            player.sendTitlePart(
+              TitlePart.TITLE, BlockSumoLang.finalDeath()
+            );
+            
+            for (BlockSumoPlayer player : playerHelper.getPlayers()) {
+              if (player.getLives() != 0) {
+                player.setLives(1);
+                player.getPlayer().toBukkit().addItem(activeLootTable.generate());
+              }
+            }
           });
       })
       .addGameFunctions(
@@ -147,14 +163,8 @@ public class BlockSumo {
 
                   timer.cancel();
                 } else {
-                  player.sendTitlePart(
-                    TitlePart.TITLE,
-                    Component.text("Respawning in " + respawnTimeLeft + "!")
-                  );
-                  player.sendTitlePart(
-                    TitlePart.SUBTITLE,
-                    BlockSumoTexts.livesLeft(bsPlayer.getLives())
-                  );
+                  player.sendTitlePart(TitlePart.TITLE, BlockSumoLang.respawningIn(respawnTimeLeft));
+                  player.sendTitlePart(TitlePart.SUBTITLE, BlockSumoLang.livesLeft(bsPlayer.getLives()));
                 }
               }, 20L, 20L
             );
@@ -207,8 +217,7 @@ public class BlockSumo {
           BuildLimitBypass buildLimitBypass = placeEvent ->
             placeEvent.getBlock().getType() == Material.TNT;
 
-          game
-            .getActiveGameState()
+          game.getActiveGameState()
             .addGameFunctions(
               activeHeightZone,
               new BuildRange(buildOrigin, buildRange, buildLimitBypass),

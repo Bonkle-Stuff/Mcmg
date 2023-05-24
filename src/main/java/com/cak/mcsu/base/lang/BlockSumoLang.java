@@ -5,7 +5,7 @@ import net.kyori.adventure.text.format.TextColor;
 
 public class BlockSumoLang {
 
-  static TextColor heartColor = TextColor.color(255, 98, 76);
+  static TextColor heartColor = TextColor.color(227, 48, 69);
   static TextColor skullColor = TextColor.color(57, 66, 73);
 
   public static Component life(boolean alive) {
@@ -31,15 +31,25 @@ public class BlockSumoLang {
                 : Component.text("").color(heartColor)));
   }
 
+  public static Component finalDeath() {
+    return Component.text("Final Death!").color(heartColor);
+  }
+
   public static Component livesLeft(int lives) {
     return (lives == 1
         ? Component.text("Last life!")
         : Component.text(lives + " lives left!")).color(heartColor);
   }
 
+  public static Component respawningIn(int time) {
+    return Component.text("Respawning in " + time + "!").color(heartColor);
+  }
+
   public static String recivedPowerup(int current, int max) {
     return String.format(
         ChatColor.BLUE + "You have received a powerup! [%d/%d]",
-        current, max);
+        current, max
+      );
   }
+
 }

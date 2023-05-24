@@ -20,7 +20,7 @@ public abstract class Game {
   }
 
   public static void registerGames(Game... games) {
-     registeredGames.addAll(games)
+     registeredGames.addAll(games);
   }
   
   public static @Nullable Game getGame(String gameId) {
@@ -63,8 +63,8 @@ public abstract class Game {
   }
   
   public List<GameState> createGameStates() {return null;}
-  public GameState createLobbyGameState() {return null;}
-  public GameState createActiveGameState() {return null;}
+  public GameState createLobbyGameState() {return new GameState("Lobby");}
+  public GameState createActiveGameState() {return new GameState("Active");}
   public PrefixProvider createPrefixProvider() {return null;}
   
   @Nullable
