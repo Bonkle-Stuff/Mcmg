@@ -1,6 +1,6 @@
 name: Mcsu
 version: 'v 3.alpha.1'
-main: com.cak.mcsu.Main
+main: com.cak.mcmg.Main
 api-version: 1.19
 commands:
   listgames:
