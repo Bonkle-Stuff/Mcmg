@@ -2,7 +2,7 @@ package com.cak.mcmg.core.game;
 
 import com.cak.mcmg.core.McsuPlayer;
 
-public class GameInventory {
+public abstract class GameInventory {
   
   McsuPlayer player;
   
@@ -13,4 +13,7 @@ public class GameInventory {
   public McsuPlayer getPlayer() {
     return player;
   }
+  
+  public abstract void apply(McsuPlayer player);
+  
 }

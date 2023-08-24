@@ -50,7 +50,7 @@ public class GameInventoryHelper<T extends GameInventory> extends GameFunction {
     return players;
   }
   
-  public static interface GameInventoryFactory<T extends GameInventory> {
+  public interface GameInventoryFactory<T extends GameInventory> {
     T build(McsuPlayer player);
   }
 }

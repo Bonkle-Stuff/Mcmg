@@ -29,6 +29,9 @@ public class Team extends FriendlyConfigFile {
     loadConfigFile("teams.yml");
     
     teamsList = (List<HashMap<String, Object>>) config.getList("teams");
+  
+  
+    Debug.log(teamsList.toString());
     
     if (teamsList == null) {
       Main.warn("[Team.loadConfig] Null list 'teams', delete teams.yml to restore to defaults");
@@ -39,7 +42,7 @@ public class Team extends FriendlyConfigFile {
       
       String teamId = (String) teamData.get("id");
       String teamName = (String) teamData.get("name");
-      ChatColor chatColor = ChatColor.getByChar(((String) teamData.get("chatColor")).charAt(1));
+      ChatColor chatColor = teamData.containsKey("chatColour") ? ChatColor.getByChar(((String) teamData.get("chatColour")).charAt(1)) : null;
       int points = (int) teamData.get("points");
       
       //>Property Validation

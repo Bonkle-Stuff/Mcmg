@@ -54,4 +54,5 @@ public class GameFunction {
   
   public void onEnabledToggle(boolean enabled) {
   }
+  
 }

@@ -40,6 +40,7 @@ public class BlockSumo extends Game {
 
   static boolean powerupsEnabled = false;
   static GamePlayerHelper<BlockSumoPlayer> playerHelper;
+  static GameInventoryHelper<BlockSumoInventory> inventoryHelper;
   static LootTable activeLootTable;
 
   @Override
@@ -56,7 +57,7 @@ public class BlockSumo extends Game {
 
   @Override
   public GameState createActiveGameState() {
-    return new GameState("Active")
+    return super.getActiveGameState()
       .setOnEnable(() -> {
         playerHelper
           .getPlayers()
@@ -100,7 +101,8 @@ public class BlockSumo extends Game {
       })
       .addGameFunctions(
         playerHelper = new GamePlayerHelper<>(BlockSumoPlayer::new),
-        new GameInventoryHelper<>(BlockSumoInventory::new),
+        inventoryHelper = new GameInventoryHelper<>(BlockSumoInventory::new),
+        new ConfiguredFunction(config -> new HeightZone(config.getInt("killHeight"))),
         new TaskInterval(
           () -> {
             for (BlockSumoPlayer player : playerHelper.getPlayers()) {
@@ -151,6 +153,9 @@ public class BlockSumo extends Game {
                   );
                   bsPlayer.setPowerupsEnabled(true);
                   bsPlayer.setSpawnProtectionEnabled(true);
+  
+                  McsuPlayer mcsuPlayer = McsuPlayer.fromBukkit(player);
+                  inventoryHelper.getPlayer(mcsuPlayer).apply(mcsuPlayer);
 
                   new BukkitRunnableLater(
                     () -> {
@@ -173,7 +178,25 @@ public class BlockSumo extends Game {
         }
       );
   }
-
+  
+  @Override
+  public GameState createLobbyGameState() {
+    return super.createLobbyGameState()
+        .addGameFunctions(
+            new ConfiguredFunction(config -> {
+              HeightZone heightZone = new HeightZone(config.getInt("killHeight"));
+              heightZone.setOnInside(player ->
+                  player.teleport(
+                      ActiveGame
+                          .getGameMap()
+                          .getLobbySpawns()[0].toBukkitPosition(ActiveGame.getWorld())
+                  )
+              );
+              return heightZone;
+            })
+        );
+  }
+  
   @Override
   public List<GameState> createGameStates() {
     return List.of(
