@@ -57,7 +57,7 @@ public class BlockSumo extends Game {
 
   @Override
   public GameState createActiveGameState() {
-    return super.getActiveGameState()
+    return super.createActiveGameState()
       .setOnEnable(() -> {
         playerHelper
           .getPlayers()
