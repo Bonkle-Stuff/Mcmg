@@ -6,12 +6,14 @@ import com.cak.mcmg.core.Team;
 import com.cak.mcmg.core.TimedEvent;
 import com.cak.mcmg.core.commands.DevCommands;
 import com.cak.mcmg.core.commands.GameCommands;
+import com.cak.mcmg.core.commands.MiscCommands;
 import com.cak.mcmg.core.eventhandler.ActivityRuleEventHandler;
 import com.cak.mcmg.core.eventhandler.PlayerConnectionEventHandler;
 import com.cak.mcmg.core.game.Game;
 import com.cak.mcmg.core.map.MapConfigLoader;
 import com.cak.mcmg.core.map.MapLoader;
 import com.cak.mcmg.core.scoreboard.PlayerScoreboard;
+import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -28,8 +30,18 @@ public final class Main extends JavaPlugin {
   
   public static String scoreboardName = ChatColor.RED + "" + ChatColor.BOLD + "> MCSU <";
   
+  public static void warnf(String string, String... formatArguments) {
+    plugin.getLogger().warning(string.formatted((Object[]) formatArguments));
+  }
+  public static void infof(String string, String... formatArguments) {
+    plugin.getLogger().info(string.formatted((Object[]) formatArguments));
+  }
+  
   public static void warn(String string) {
     plugin.getLogger().warning(string);
+  }
+  public static void info(String string) {
+    plugin.getLogger().info(string);
   }
   
   @Override
@@ -40,18 +52,25 @@ public final class Main extends JavaPlugin {
     path = Main.plugin.getDataFolder().getAbsolutePath();
     
     //Clears some existing maps
-    Debug.log("[Main.onEnable] Existing maps: ");
+    Main.info("[Main.onEnable] Existing maps: ");
     for (World world : Bukkit.getWorlds()) {
       Debug.log("> " + world.getName());
       
-      if (world.getName().startsWith("map-") || world.getName().startsWith("dev-")) {
-        Debug.log("> Deleting game map world: " + world.getName());
+      if (world.getName().startsWith("map-")) {
+        Main.info("> Deleting game map world: " + world.getName());
         MapLoader.clearWorld(world.getName());
+      } else if (world.getName().startsWith("build-")) {
+        Main.warn("> Detected a build world (maybe clear this?): " + world.getName());
       }
     }
     
     //Register players
     Bukkit.getOnlinePlayers().forEach(McsuPlayer::new);
+    
+    Bukkit.getOnlinePlayers().forEach(p -> {
+      Iterable<? extends BossBar> bossBars = p.activeBossBars();
+      bossBars.forEach(p::hideBossBar);
+    });
     
     //Register EventHandlers5
     getServer().getPluginManager().registerEvents(new ActivityRuleEventHandler(), this);
@@ -64,7 +83,7 @@ public final class Main extends JavaPlugin {
     MapConfigLoader.load();
     
     //Scoreboard
-    Bukkit.getOnlinePlayers().forEach(PlayerScoreboard::new);
+    McsuPlayer.players.forEach(PlayerScoreboard::new);
     new BukkitRunnable() {
       @Override
       public void run() {
@@ -75,6 +94,7 @@ public final class Main extends JavaPlugin {
     //Commands
     GameCommands.register();
     DevCommands.register();
+    MiscCommands.register();
     
   }
   

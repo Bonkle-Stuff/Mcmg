@@ -7,6 +7,7 @@ public class HeightZone extends ZoneFunction {
   double yLevel;
   
   public HeightZone(double yLevel) {
+    super();
     this.yLevel = yLevel;
   }
   

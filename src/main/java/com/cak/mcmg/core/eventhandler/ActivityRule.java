@@ -5,7 +5,11 @@ public enum ActivityRule {
   TILE_BREAKING(false),
   TILE_PLACING(false),
   DROP_ITEMS(false),
+  PLAYER_MOVEMENT(true),
   EXPLOSION_DAMAGE(false),
+  FALL_DAMAGE(false),
+  ANY_DAMAGE(true),
+  HUNGER(false),
   SUFFOCATION(false),
   EXPLOSION_GRIEFING(false),
   AUTO_IGNITE_TNT(true),
@@ -42,6 +46,7 @@ public enum ActivityRule {
   
   ActivityRule(boolean enabledDefault) {
     this.enabledDefault = enabledDefault;
+    this.enabled = enabledDefault;
   }
   
   public void reset() {

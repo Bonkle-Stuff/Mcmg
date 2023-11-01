@@ -1,5 +1,7 @@
 package com.cak.mcmg.core.game.helpers;
 
+import com.cak.mcmg.core.McsuPlayer;
+import com.cak.mcmg.core.game.ActiveGame;
 import com.cak.mcmg.core.game.GameFunction;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -8,9 +10,44 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.ArrayList;
-import java.util.function.Consumer;
 
 public class ZoneFunction extends GameFunction {
+  
+  public ZoneFunction() {
+    this.setListener(new Listener() {
+      @EventHandler
+      public void onPlayerMoveEvent(PlayerMoveEvent moveEvent) {
+        Location location = moveEvent.getTo();
+        Player player = moveEvent.getPlayer();
+        
+        if (!ActiveGame.getAlivePlayers().contains(McsuPlayer.fromBukkit(player)))
+          return;
+    
+        if (isInside(location.getX(), location.getY(), location.getZ())) {
+      
+          if (!playersInside.contains(player)) {
+            playersInside.add(player);
+            onEnter(player);
+          }
+      
+          onInside(player);
+      
+        } else {
+      
+          if (playersInside.contains(player)) {
+            playersInside.remove(player);
+            onExit(player);
+          }
+      
+        }
+      }
+    });
+  }
+  
+  @Override
+  public void onEnable() {
+    super.onEnable();
+  }
   
   public boolean isInside(double x, double y, double z) {
     return false;
@@ -18,53 +55,12 @@ public class ZoneFunction extends GameFunction {
   
   ArrayList<Player> playersInside = new ArrayList<>();
   
-  Consumer<Player> onEnter;
-  Consumer<Player> onExit;
-  Consumer<Player> onInside;
+  public void onEnter(Player player) {}
+  public void onExit(Player player) {}
+  public void onInside(Player player) {}
   
-  Listener listener = new Listener() {
-    @EventHandler
-    public void onPlayerMoveEvent(PlayerMoveEvent moveEvent) {
-      Location location = moveEvent.getTo();
-      Player player = moveEvent.getPlayer();
-      
-      if (isInside(location.getX(), location.getY(), location.getZ())) {
-        
-        if (!playersInside.contains(player)) {
-          playersInside.add(player);
-          if (onEnter != null)
-            onEnter.accept(player);
-        }
-        
-        if (onInside != null)
-          onInside.accept(player);
-        
-      } else {
-        
-        if (playersInside.contains(player)) {
-          playersInside.remove(player);
-          if (onExit != null)
-            onExit.accept(player);
-        }
-        
-      }
-    }
-  };
-  
-  @Override
-  public Listener getListener() {
-    return listener;
+  public ArrayList<Player> getPlayersInside() {
+    return playersInside;
   }
   
-  public void setOnEnter(Consumer<Player> onEnter) {
-    this.onEnter = onEnter;
-  }
-  
-  public void setOnExit(Consumer<Player> onExit) {
-    this.onExit = onExit;
-  }
-  
-  public void setOnInside(Consumer<Player> onInside) {
-    this.onInside = onInside;
-  }
 }

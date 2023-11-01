@@ -18,12 +18,17 @@ public class MapConfigLoader {
   
   public static void load() {//Get configfiles in mapconfig from datafolder and create necassary gamemaps
     
-    File mapConfigDir = new File(Main.plugin.getDataFolder().getAbsolutePath() + "\\MapConfig");
+    File mapConfigDir = new File(Main.plugin.getDataFolder().getAbsolutePath() + File.separator + "MapConfig");
+  
+    if (!mapConfigDir.exists()) {
+      Bukkit.getLogger().warning(String.format("[MapConfigLoader.load] Could not read map config (Folder MapConfig does not exist)! [Path : %s]", mapConfigDir.getAbsoluteFile()));
+      return;
+    }
     
     File[] configFiles = mapConfigDir.listFiles();
     
     if (configFiles == null) {
-      Bukkit.getLogger().warning("[MapConfigLoader.load] Could not read map config (listFiles() is null)!");
+      Bukkit.getLogger().warning(String.format("[MapConfigLoader.load] Could not read map config (listFiles() is null)! [Path : %s]", mapConfigDir.getAbsoluteFile()));
       return;
     }
     
@@ -43,7 +48,7 @@ public class MapConfigLoader {
     Debug.log("> Loading: " + configFile.getName());
     
     YamlConfiguration config = YamlConfiguration.loadConfiguration(new File(
-        mapConfigDir + "\\" + configFile.getName()
+        mapConfigDir + File.separator + configFile.getName()
     ));
     
     Game.getGame(config.getString("gameId"));
@@ -93,7 +98,11 @@ public class MapConfigLoader {
       double[] loc = Arrays.stream(spawnData.get(i).get("loc").split(" ")).mapToDouble(Double::valueOf).toArray();
       double[] dir = Arrays.stream(spawnData.get(i).get("dir").split(" ")).mapToDouble(Double::valueOf).toArray();
       
-      Team team = Team.get(spawnData.get(i).get("team")); //Nullable
+      Team team = Team.get(spawnData.get(i).get("team"));
+  
+      if (team == null) {
+        Main.warnf("Could not resolve team '%s'", spawnData.get(i).get("team"));
+      }
       
       spawns[i] = new GameSpawn(loc, dir, team);
     }

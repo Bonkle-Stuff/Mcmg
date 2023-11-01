@@ -13,7 +13,6 @@ public class McsuPlayer {
   public static ArrayList<McsuPlayer> players = new ArrayList<>();
   
   Team team;
-  
   Player bukkitPlayer;
   
   public McsuPlayer(Player player) {
@@ -33,6 +32,5 @@ public class McsuPlayer {
   public Player toBukkit() {
     return bukkitPlayer;
   }
-  
   
 }

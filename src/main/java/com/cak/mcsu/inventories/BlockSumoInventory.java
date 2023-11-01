@@ -11,10 +11,10 @@ public class BlockSumoInventory extends GameInventory {
   
   public BlockSumoInventory(McsuPlayer player) {
     super(player);
-    apply(player);
+    apply();
   }
   
-  public void apply(McsuPlayer player) {
+  public void apply() {
     Inventory inventory = player.toBukkit().getInventory();
   
     inventory.setItem(0, new McsuItemStack(Material.SHEARS).setUnbreakable(true));

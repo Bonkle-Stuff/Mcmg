@@ -2,10 +2,7 @@ package com.cak.mcmg.core.map;
 
 import com.cak.mcmg.Main;
 import com.cak.mcmg.core.Debug;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
+import org.bukkit.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,10 +13,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MapLoader {
   
-  public static void saveWorld(String world, boolean devWorld) {
+  public static void saveWorld(String world, boolean buildWorld) {
     
     File worldDir = Main.plugin.getServer().getWorldContainer();
-    String worldName = (devWorld ? "dev" : "map") + "-" + world;
+    String worldName = (buildWorld ? "build" : "map") + "-" + world;
     
     World saveWorld = Bukkit.getWorld(worldName);
     
@@ -28,7 +25,7 @@ public class MapLoader {
     }
     
     
-    File worldFolder = new File(Main.path + "\\DevWorlds\\" + world);
+    File worldFolder = new File(Main.path + File.separator + "BuildWorld" + File.separator + world);
     if (worldFolder.exists()) {
       deleteDirectory(worldFolder);
       Debug.log("Overwritten world for '" + worldName + "' in devmaps during save");
@@ -39,8 +36,8 @@ public class MapLoader {
     
     try {
       copyDirectory(
-          worldDir + "\\" + worldName,
-          Main.path + "\\DevWorlds\\" + world
+          worldDir + File.separator + worldName,
+          Main.path + File.separator + "BuildWorld" + File.separator + world
       );
     } catch (IOException e) {
       throw new RuntimeException(e);
@@ -50,15 +47,11 @@ public class MapLoader {
   }
   
   public static World loadWorld(String world) {
-    return loadWorld(world, false);
-  }
-  
-  public static World loadWorld(String world, boolean devWorld) {
     
     File worldDir = Main.plugin.getServer().getWorldContainer();
-    String worldName = (devWorld ? "dev" : "map") + "-" + world;
+    String worldName = "map-" + world;
     
-    File worldFolder = new File(worldDir + "\\" + worldName);
+    File worldFolder = new File(worldDir + File.separator + worldName);
     if (worldFolder.exists()) {
       deleteDirectory(worldFolder);
       Debug.log("Overwritten world for '" + worldName + "' during load");
@@ -66,8 +59,8 @@ public class MapLoader {
     
     try {
       copyDirectory(
-          Main.path + "\\" + (devWorld ? "DevWorlds" : "Maps") + "\\" + world,
-          worldDir + "\\" + worldName
+          Main.path + File.separator + "Maps" + File.separator + world,
+          worldDir + File.separator + worldName
       );
     } catch (IOException e) {
       throw new RuntimeException(e);
@@ -78,6 +71,7 @@ public class MapLoader {
     World bukkitWorld = Bukkit.getWorld(worldName);
     assert bukkitWorld != null;
     bukkitWorld.setAutoSave(false);
+    bukkitWorld.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
     
     return bukkitWorld;
     
@@ -105,16 +99,16 @@ public class MapLoader {
       Main.warn("> [MapLoader.clearWorld] Unsuccessfully loaded world '" + world + "'");
     }
     
-    deleteDirectory(new File(worldDir + "\\" + world));
+    deleteDirectory(new File(worldDir + File.separator + world));
     
   }
   
-  public static World createWorld(String world, boolean devWorld) {
+  public static World createWorld(String world, boolean buildWorld) {
     
     File worldDir = Main.plugin.getServer().getWorldContainer();
-    String worldName = (devWorld ? "dev" : "map") + "-" + world;
+    String worldName = (buildWorld ? "build" : "map") + "-" + world;
     
-    File worldFolder = new File(worldDir + "\\" + worldName);
+    File worldFolder = new File(worldDir + File.separator + worldName);
     if (worldFolder.exists()) {
       deleteDirectory(worldFolder);
       Debug.log("Overwritten world for '" + worldName + "' during load");
@@ -122,8 +116,8 @@ public class MapLoader {
     
     try {
       copyDirectory(
-          Main.path + "\\EmptyWorld",
-          worldDir + "\\" + worldName
+          Main.path + File.separator + "EmptyWorld",
+          worldDir + File.separator + worldName
       );
     } catch (IOException e) {
       throw new RuntimeException(e);

@@ -7,15 +7,23 @@ import com.cak.mcmg.core.game.ActiveGame;
 import com.cak.mcmg.core.game.Game;
 import com.cak.mcmg.core.map.GameMap;
 import com.cak.mcmg.core.scoreboard.PlayerScoreboard;
+import com.cak.mcmg.core.util.Text;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
+import java.util.Objects;
 
 public class GameCommands {
   
   public static void register() {
     
     Main.plugin.getCommand("startgame").setExecutor((sender, command, label, args) -> {
+  
+      if (args.length != 1) {
+        return false;
+      }
       
       for (McsuPlayer player : McsuPlayer.players) {
         if (player.getTeam() == null) {
@@ -24,8 +32,16 @@ public class GameCommands {
           return true;
         }
       }
+  
+      Game game = Game.registeredGames.stream().filter(candidate ->
+          Objects.equals(candidate.getId(), args[0])).findFirst().orElse(null);
       
-      ActiveGame.playGame(Game.registeredGames.get(0));
+      if (game == null) {
+        sender.sendMessage(Text.formatted("Could not find game '%s'", Text.red, args[0]));
+        return false;
+      }
+      
+      ActiveGame.playGame(game);
       return true;
     });
     
@@ -33,8 +49,10 @@ public class GameCommands {
     Main.plugin.getCommand("listgames").setExecutor((sender, command, label, args) -> {
       sender.sendMessage("Registered games:");
       for (Game game : Game.registeredGames) {
-        sender.sendMessage("   " + ChatColor.GRAY + "Name: " + ChatColor.WHITE + game.getName() +
-            ChatColor.GRAY + " | Id: " + ChatColor.WHITE + game.getId()
+        Component spacing = Text.raw(" | ").color(Text.darkGrey);
+        sender.sendMessage(Text.raw("   ")
+            .append(spacing).append(Text.raw("Name: ").color(Text.darkGrey).append(Text.raw(game.getName())))
+            .append(spacing).append(Text.raw("Id: ").color(Text.darkGrey).append(Text.raw(game.getId())))
         );
       }
       return true;
@@ -42,10 +60,12 @@ public class GameCommands {
     
     Main.plugin.getCommand("listmaps").setExecutor((sender, command, label, args) -> {
       sender.sendMessage("Registered maps:");
-      for (GameMap game : GameMap.maps) {
-        sender.sendMessage("   " + ChatColor.GRAY + "Name: " + ChatColor.WHITE + game.getMapName() +
-            ChatColor.GRAY + " | MapId: " + ChatColor.WHITE + game.getMapId() +
-            ChatColor.GRAY + " | GameId: " + game.getGameId()
+      for (GameMap map : GameMap.maps) {
+        Component spacing = Text.raw(" | ").color(Text.darkGrey);
+        sender.sendMessage(
+            Text.indent(1).append(Text.raw("Name: ", Text.darkGrey).append(Text.raw(map.getMapName(), Text.white)))
+            .append(spacing).append(Text.raw("MapId: ", Text.darkGrey).append(Text.raw(map.getMapId(), Text.white)))
+            .append(spacing).append(Text.raw("GameId: ", Text.darkGrey).append(Text.raw(map.getGameId(), Text.white)))
         );
       }
       return true;
@@ -66,7 +86,7 @@ public class GameCommands {
     Main.plugin.getCommand("team").setExecutor((sender, command, label, args) -> {
       
       if (args.length < 1) {
-        sender.sendMessage(ChatColor.RED + "No option specified either set / points");
+        sender.sendMessage(ChatColor.RED + "No option specified either set or points");
         return false;
       }
       
@@ -105,14 +125,16 @@ public class GameCommands {
           if (oldTeam != null) {
             sender.sendMessage(ChatColor.AQUA + " > Removed " + player.getName() + " from team " + oldTeam.getColoredName());
           }
-          
-          PlayerScoreboard.getScoreboard(mcsuPlayer).updateTeamPrefix();
+  
+          PlayerScoreboard.updateAllPrefixes();
           
           Team.saveToConfig();
           
           break;
         case "points":
           break;
+        default:
+          return false;
       }
       return true;
     });

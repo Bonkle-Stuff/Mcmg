@@ -4,7 +4,7 @@ import com.cak.mcmg.core.McsuPlayer;
 
 public abstract class GameInventory {
   
-  McsuPlayer player;
+  protected McsuPlayer player;
   
   public GameInventory(McsuPlayer player) {
     this.player = player;
@@ -14,6 +14,6 @@ public abstract class GameInventory {
     return player;
   }
   
-  public abstract void apply(McsuPlayer player);
+  public abstract void apply();
   
 }

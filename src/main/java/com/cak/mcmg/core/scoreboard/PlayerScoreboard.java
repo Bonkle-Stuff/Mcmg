@@ -12,27 +12,25 @@ import org.bukkit.scoreboard.*;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
-import java.util.function.Supplier;
 
 public class PlayerScoreboard {
   
-  static HashMap<McsuPlayer, PlayerScoreboard> playerScoreboards = new HashMap<>();
+  public static HashMap<McsuPlayer, PlayerScoreboard> playerScoreboards = new HashMap<>();
+  
+  //Scoreboard
+  static PrefixProvider teamPrefixProvider = player -> Component.text(player.getTeam() == null ? ChatColor.GRAY + "[None] " :
+      player.getTeam().getChatColor() + "[" + player.getTeam().getShortName() + "] ");
+  @Nullable static PrefixProvider gamePrefixProvider;
   
   EntryGenerator entryGenerator = new EntryGenerator();
   ScoreboardWidget[] widgets;
   Objective objective;
   Scoreboard scoreboard;
   McsuPlayer player;
-  Team playerTeam;
   
-  //Result is cached for performance (maybe?)
-  static Supplier<String> teamPrefixProvider;
-  String teamPrefixLast = "";
-  @Nullable
-  static PrefixProvider gamePrefixProvider;
-  Component gamePrefixLast = Component.text("");
-  
-  public PlayerScoreboard(Player bukkitPlayer) {
+  public PlayerScoreboard(McsuPlayer player) {
+    
+    Player bukkitPlayer = player.toBukkit();
     
     widgets = new ScoreboardWidget[]{
         new TeamDisplay(), new GameCountdown()
@@ -45,21 +43,11 @@ public class PlayerScoreboard {
     );
     objective.setDisplaySlot(DisplaySlot.SIDEBAR);
     
-    playerTeam = scoreboard.registerNewTeam(bukkitPlayer.getUniqueId().toString());
-    player = McsuPlayer.fromBukkit(bukkitPlayer);
-    
-    playerTeam.addPlayer(bukkitPlayer);
-    
-    teamPrefixProvider = () -> player.getTeam() == null ? ChatColor.GRAY + "[None] " :
-        player.getTeam().getChatColor() + "[" + player.getTeam().getId().toUpperCase() + "] ";
-    updateTeamPrefix();
-    
-    playerTeam.setColor((player.getTeam() == null ? ChatColor.GRAY :
-        player.getTeam().getChatColor()));
-    
     bukkitPlayer.setScoreboard(scoreboard);
     
     playerScoreboards.put(player, this);
+  
+    updateAllPrefixes();
     
     int score = 0;
     for (ScoreboardWidget widget : widgets) {
@@ -70,6 +58,27 @@ public class PlayerScoreboard {
       score = widget.update(player, scoreboard, objective, score);
       
     }
+    
+  }
+  
+  public static void updateAllPrefixes() {
+    playerScoreboards.keySet().forEach(player -> playerScoreboards.get(player).updatePlayersForScoreboard());
+  }
+  
+  public void updatePlayersForScoreboard() {
+  
+    playerScoreboards.keySet().forEach(player -> {
+      Player bukkitPlayer = player.toBukkit();
+      Team playerTeam = scoreboard.getTeam(bukkitPlayer.getUniqueId().toString());
+      if (playerTeam == null) playerTeam = scoreboard.registerNewTeam(bukkitPlayer.getUniqueId().toString());
+  
+      playerTeam.setColor((player.getTeam() == null ? ChatColor.GRAY :
+          player.getTeam().getChatColor()));
+  
+      updatePrefix(playerTeam, player);
+      playerTeam.addPlayer(player.toBukkit());
+      
+    });
     
   }
   
@@ -97,23 +106,18 @@ public class PlayerScoreboard {
   
   public static void setGamePrefixProvider(@Nullable PrefixProvider gamePrefixProvider) {
     PlayerScoreboard.gamePrefixProvider = gamePrefixProvider;
-    playerScoreboards.values().forEach(PlayerScoreboard::updateGamePrefix);
+    PlayerScoreboard.updateAllPrefixes();
   }
   
-  public void updateTeamPrefix() {
-    teamPrefixLast = teamPrefixProvider.get();
-    playerTeam.prefix(getPrefix());
-    playerTeam.setColor((player.getTeam() == null ? ChatColor.GRAY :
+  public static void updatePrefix(Team team, McsuPlayer player) {
+    team.prefix(getPrefix(player));
+    team.setColor((player.getTeam() == null ? ChatColor.GRAY :
         player.getTeam().getChatColor()));
   }
   
-  public void updateGamePrefix() {
-    gamePrefixLast = gamePrefixProvider == null ? Component.text("") : gamePrefixProvider.get(player);
-    playerTeam.prefix(getPrefix());
-  }
-  
-  private Component getPrefix() {
-    return gamePrefixLast.append(Component.text(teamPrefixLast));
+  private static Component getPrefix(McsuPlayer player) {
+    return getGamePrefixProvider().get(player)
+        .append(getTeamPrefixProvider().get(player));
   }
   
   /**
@@ -132,4 +136,13 @@ public class PlayerScoreboard {
       return result.toString();
     }
   }
+  
+  public static PrefixProvider getTeamPrefixProvider() {
+    return teamPrefixProvider;
+  }
+  
+  public static PrefixProvider getGamePrefixProvider() {
+    return gamePrefixProvider == null ? p -> Component.text("") : gamePrefixProvider;
+  }
+  
 }

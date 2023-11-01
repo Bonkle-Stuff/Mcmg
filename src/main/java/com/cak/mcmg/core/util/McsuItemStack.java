@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * <h3>A <b>wrapper class</b> for ItemStack to allow chaining and some other extra functionality.
@@ -151,6 +152,21 @@ public class McsuItemStack extends ItemStack {
    */
   public McsuItemStack setItemMetaRi(ItemMeta meta) {
     setItemMeta(meta);
+    return this;
+  }
+  
+  /**
+   * <h3>Wrapper function to set ItemMeta and allow chaining with other <code>RI</code> methods,
+   * runs <code>setItemMeta()</code>.</h3>
+   *
+   * <span style="font-style: italic;">Returns the McsuItemStack so that you can chain methods</span>
+   *
+   * @param metaModifier Modifier to be applied to the item meta
+   * @return McsuItemStack with set meta
+   * @see ItemStack#setItemMeta(ItemMeta)
+   */
+  public McsuItemStack modifyItemMetaRi(Function<ItemMeta, ItemMeta> metaModifier) {
+    setItemMeta(metaModifier.apply(getItemMeta()));
     return this;
   }
   

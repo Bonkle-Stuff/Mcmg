@@ -11,6 +11,7 @@ public class GameSpawn {
   
   final double[] location;
   final double[] direction;
+  @Nullable
   final Team team;
   
   public GameSpawn(double[] location, double[] direction, @Nullable Team team) {
@@ -26,7 +27,7 @@ public class GameSpawn {
   public double[] getDirection() {
     return direction;
   }
-  
+  @Nullable
   public Team getTeam() {
     return team;
   }

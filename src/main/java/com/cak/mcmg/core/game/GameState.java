@@ -56,13 +56,6 @@ public class GameState {
     if (this.enabled != enabled) {//If there is a change in enabled state
       
       this.enabled = enabled;
-      
-      for (GameFunction gameFunction : gameFunctions) {
-        
-        gameFunction.setEnabled(enabled);
-        
-      }
-      
       if (enabled) { //Execute on enable or on disable
         if (onEnable != null) {
           onEnable.run();
@@ -72,6 +65,13 @@ public class GameState {
           onDisable.run();
         }
       }
+      
+      for (GameFunction gameFunction : gameFunctions) {
+        
+        gameFunction.setEnabled(enabled);
+        
+      }
+      
       
     }
     

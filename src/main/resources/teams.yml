@@ -1,41 +1,49 @@
 teams:
 - chatColour: §c
   name: Red Team
+  shortname: Red
   points: 0
   id: red
   playerUUIDs: []
 - chatColour: §a
   name: Green Team
+  shortname: Green
   points: 0
   id: green
   playerUUIDs: []
 - chatColour: §e
   name: Yellow Team
+  shortname: Yellow
   points: 0
   id: yellow
   playerUUIDs: []
 - chatColour: §b
   name: Aqua Team
+  shortname: Aqua
   points: 0
-  id: aqua
+  id: light_blue
   playerUUIDs: []
 - chatColour: §d
   name: Pink Team
+  shortname: Pink
   points: 0
   id: pink
   playerUUIDs: []
 - chatColour: §f
   name: White Team
+  shortname: White
   points: 0
   id: white
   playerUUIDs: []
 - chatColour: §7
   name: UKIP
+  shortname: UKIP
   points: 0
-  id: grey
+  id: gray
   playerUUIDs: []
 - chatColour: §9
   name: Blue Team
+  shortname: Blue
   points: 0
   id: blue
   playerUUIDs: []

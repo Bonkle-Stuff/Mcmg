@@ -20,11 +20,11 @@ public class ConfiguredFunction extends GameFunction {
     super.onEnable();
     configuredGameFunction = functionSupplier.apply(ActiveGame.getMapGameData());
     
-    configuredGameFunction.onEnable();
+    configuredGameFunction.setEnabled(true);
   }
   
   @Override
   public void onDisable() {
-    configuredGameFunction.onDisable();
+    configuredGameFunction.setEnabled(false);
   }
 }

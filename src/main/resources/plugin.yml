@@ -1,5 +1,5 @@
 name: Mcsu
-version: '3.a.2'
+version: '3.a.3'
 main: com.cak.mcmg.Main
 api-version: 1.19
 commands:
@@ -33,3 +33,11 @@ commands:
   hidepoints:
     description: Hides all spawnpoints and lobby points in map editor
     usage: /hidepoints
+
+  activityrule:
+    description: Enables or disables an activity rule
+    usage: /activityrule <id> [true | false]
+
+  enableblocks:
+    description: Allows block placing and breaking
+    usage: /enableblocks

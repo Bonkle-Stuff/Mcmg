@@ -4,6 +4,8 @@ import com.cak.mcmg.Main;
 
 public class ConfigValidator {
   
+  /**Prints a warning message if any of the specified arguments are null (paired in name and the variable)
+   * @return true if any were null*/
   public static boolean warnNullAny(String source, String suffix, Object... args) {
     boolean anyNull = false;
     

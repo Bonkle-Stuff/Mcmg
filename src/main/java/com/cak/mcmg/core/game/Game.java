@@ -1,8 +1,10 @@
 package com.cak.mcmg.core.game;
 
 import com.cak.mcmg.core.Debug;
+import com.cak.mcmg.core.McsuPlayer;
 import com.cak.mcmg.core.scoreboard.PrefixProvider;
 import com.cak.mcsu.AllGames;
+import org.bukkit.GameMode;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -68,11 +70,17 @@ public abstract class Game {
     return this;
   }
   
-  public List<GameState> createGameStates() {return null;}
+  public List<GameState> createGameStates() {return List.of();}
   public GameState createLobbyGameState() {return new GameState("Lobby");}
   public GameState createActiveGameState() {return new GameState("Active");}
   public PrefixProvider createPrefixProvider() {return null;}
   
+  /**Eliminate the player as they left the game*/
+  public void handlePlayerLeft(McsuPlayer mcsuPlayer) {
+    if (ActiveGame.getAlivePlayers().contains(mcsuPlayer) && ActiveGame.hasStarted()) {
+      mcsuPlayer.toBukkit().setGameMode(GameMode.SPECTATOR);
+    }
+  }
   
   public GameState getLobbyGameState() {
     return lobbyGameState;

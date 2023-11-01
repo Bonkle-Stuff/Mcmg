@@ -1,5 +1,7 @@
 package com.cak.mcmg.core.map;
 
+import com.cak.mcmg.core.McsuPlayer;
+import com.cak.mcmg.core.Team;
 import com.cak.mcmg.core.game.GameSpawnCategory;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -7,10 +9,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class GameMap {
   
@@ -69,11 +68,28 @@ public class GameMap {
     return lobbySpawns;
   }
   
-  public void loadSpawns(World world, GameSpawnCategory spawn) {
-    List<GameSpawn> spawns = new ArrayList<>(List.of(spawn == GameSpawnCategory.GAME ? gameSpawns : lobbySpawns));
+  public void loadSpawns(World world, GameSpawnCategory spawnType) {
+    List<GameSpawn> spawns = new ArrayList<>(List.of(spawnType == GameSpawnCategory.GAME ? gameSpawns : lobbySpawns));
     
+    if (this.spawnType == SpawnType.TEAM && spawnType == GameSpawnCategory.GAME) {
+  
+      HashMap<Team, GameSpawn> teamSpawns = new HashMap<>();
+      
+      for (GameSpawn spawn : spawns) {
+        if (spawn.getTeam() != null)
+          teamSpawns.put(spawn.getTeam(), spawn);
+        else {
+          throw new RuntimeException("Spawn given without a team, but tried to load it as a team spawn anyway!");
+        }
+      }
+      
+      for (Player player : Bukkit.getOnlinePlayers()) {
+        teamSpawns.get(McsuPlayer.fromBukkit(player).getTeam()).teleportPlayerTo(player, world);
+      }
+      return;
+    }
     
-    if (spawnType == SpawnType.SHUFFLE || spawn == GameSpawnCategory.LOBBY) {
+    if (this.spawnType == SpawnType.SHUFFLE || spawnType == GameSpawnCategory.LOBBY) {
       Collections.shuffle(spawns);
     }
     
