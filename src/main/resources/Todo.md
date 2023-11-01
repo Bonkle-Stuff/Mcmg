@@ -1,0 +1,4 @@
+- Change occurrences of players to Activegame.players
+- General code formatting in GameFnutions
+- KOTH, gameTeams
+- Team scoring

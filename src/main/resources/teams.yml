@@ -1,60 +1,49 @@
 teams:
 - chatColour: §c
   name: Red Team
+  shortname: Red
   points: 0
   id: red
-  playerUUIDs:
-  - 59afee25-03be-4e03-adf1-129d8e7f37fb
-  - fe6a2c9c-7603-4ceb-92e2-2585a274fc10
-  - 22d3fa49-ceab-48da-9661-9de3550f6243
+  playerUUIDs: []
 - chatColour: §a
   name: Green Team
+  shortname: Green
   points: 0
   id: green
-  playerUUIDs:
-  - 5565b496-d6d2-4d0f-a7b2-a9823be351c2
-  - 0b2dd0c3-76d5-4dc5-ba3b-3ce5468234b7
+  playerUUIDs: []
 - chatColour: §e
   name: Yellow Team
+  shortname: Yellow
   points: 0
   id: yellow
   playerUUIDs: []
 - chatColour: §b
   name: Aqua Team
+  shortname: Aqua
   points: 0
-  id: aqua
-  playerUUIDs:
-  - 37850395-3fa1-4f1f-bc61-b92fcb6825d6
-  - 7ef761d2-bd39-4ced-ab20-8e31b86c6b37
-  - 53fec3bf-575c-467d-b6c5-d490a4bafedf
+  id: light_blue
+  playerUUIDs: []
 - chatColour: §d
   name: Pink Team
+  shortname: Pink
   points: 0
   id: pink
-  playerUUIDs:
-  - 9545bd6e-8e71-432e-8737-ed811c63c449
-  - 7a467eb4-e065-4db3-a345-5650822a20cb
-  - ed45dd84-df0d-4760-97e5-fcfebc1bfb66
-  - 6afb1b95-53dc-4b15-805c-af03bbcd5b4c
+  playerUUIDs: []
 - chatColour: §f
   name: White Team
+  shortname: White
   points: 0
   id: white
-  playerUUIDs:
-  - 002459a9-f664-4819-82ff-a0299f857f61
+  playerUUIDs: []
 - chatColour: §7
   name: UKIP
+  shortname: UKIP
   points: 0
-  id: grey
-  playerUUIDs:
-  - af4cc593-6eab-4fb1-9174-8c0d1a349537
-  - db05ffc5-c5e0-4f62-89bd-56f673b8ac59
+  id: gray
+  playerUUIDs: []
 - chatColour: §9
   name: Blue Team
+  shortname: Blue
   points: 0
   id: blue
-  playerUUIDs:
-  - 8b92637f-958d-4ddd-8d99-257a25ce7c
-  - e96663e2-6664-4880-8408-9623cd6ab79a
-  - 8b92637f-958d-4ddd-8d99-257a25ce7cc1
-  - f26db6f5-db10-4870-a1df-d3868c85c7f6
+  playerUUIDs: []
