@@ -6,6 +6,7 @@ public enum ActivityRule {
   TILE_PLACING(false),
   DROP_ITEMS(false),
   PLAYER_MOVEMENT(true),
+  LOCKED_INVENTORY(false),
   EXPLOSION_DAMAGE(false),
   FALL_DAMAGE(false),
   ANY_DAMAGE(true),
@@ -14,6 +15,7 @@ public enum ActivityRule {
   EXPLOSION_GRIEFING(false),
   AUTO_IGNITE_TNT(true),
   DISABLE_TRAPDOORS(true),
+  PLACE_FIREWORKS(false),
   ;
   
   public static void clearAll() {

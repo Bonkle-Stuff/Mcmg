@@ -1,4 +1,4 @@
-package com.cak.mcsu.loottables;
+package com.cak.mcsu.games.blocksumo;
 
 import com.cak.mcmg.core.util.LootTable;
 import com.cak.mcmg.core.util.McsuItemStack;

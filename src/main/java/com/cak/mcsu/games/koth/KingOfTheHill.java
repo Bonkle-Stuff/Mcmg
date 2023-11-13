@@ -1,4 +1,4 @@
-package com.cak.mcsu.games;
+package com.cak.mcsu.games.koth;
 
 import com.cak.mcmg.Main;
 import com.cak.mcmg.core.McsuPlayer;
@@ -12,9 +12,6 @@ import com.cak.mcmg.core.game.helpers.ZoneFunction;
 import com.cak.mcmg.core.scoreboard.PlayerScoreboard;
 import com.cak.mcmg.core.scoreboard.PrefixProvider;
 import com.cak.mcmg.core.util.Text;
-import com.cak.mcsu.inventories.KingOfTheHillInventory;
-import com.cak.mcsu.lang.KingOfTheHillLang;
-import com.cak.mcsu.players.KingOfTheHillPlayer;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -123,7 +120,6 @@ public class KingOfTheHill extends Game {
             })
         )
         .setOnDisable(() -> {
-          Main.info("disposen");
           hillZoneTicker.cancel();
           Main.info(String.valueOf(hillZoneTicker.isCancelled()));
           ActiveGame.getWorld().getPlayers().forEach(gamePlayer -> gamePlayer.hideBossBar(bossbar));
