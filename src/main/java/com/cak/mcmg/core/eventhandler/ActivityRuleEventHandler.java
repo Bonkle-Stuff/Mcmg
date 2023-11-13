@@ -11,14 +11,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.entity.*;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -145,14 +140,16 @@ public class ActivityRuleEventHandler implements Listener {
     
   }
   
-  //>Fireball Respawn & Disable Trapdoors
+  //>Fireball Respawn & Disable Trapdoors & No place fireworks
   @EventHandler
   public void onPlayerInteract(PlayerInteractEvent event) {
     if (event.getPlayer().isSneaking() && event.isBlockInHand()) return; //Player is sneaking so they will place instead of interacting
   
-    event.setCancelled(event.getClickedBlock() != null &&
-        event.getClickedBlock().getType().name().endsWith("_TRAPDOOR") &&
-        event.getAction() != Action.LEFT_CLICK_BLOCK);
+    event.setCancelled(event.getClickedBlock() != null && (
+        (event.getClickedBlock().getType().name().endsWith("_TRAPDOOR") &&
+            event.getAction() != Action.LEFT_CLICK_BLOCK)
+            || (event.getItem() != null && event.getItem().getType() == Material.FIREWORK_ROCKET)
+    ));
     
     if (event.getItem() != null &&
         event.getItem().getType() == Material.FIRE_CHARGE) {
@@ -175,6 +172,21 @@ public class ActivityRuleEventHandler implements Listener {
       event.setTo(event.getFrom().setDirection(event.getTo().getDirection()));
     }
     
+  }
+  
+  //>Player Inventory actions
+  @EventHandler
+  public void onEntityShootBowEvent(EntityShootBowEvent event) {
+    event.setConsumeItem(ActivityRule.LOCKED_INVENTORY.isEnabled());
+  }
+  
+  @EventHandler
+  public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
+    event.setCancelled(ActivityRule.LOCKED_INVENTORY.isEnabled());
+  }
+  @EventHandler
+  public void onInventoryClickEvent(InventoryClickEvent event) {
+    event.setCancelled(ActivityRule.LOCKED_INVENTORY.isEnabled());
   }
   
   //region Respawn location handling

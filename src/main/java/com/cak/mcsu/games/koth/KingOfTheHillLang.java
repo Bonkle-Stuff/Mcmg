@@ -1,7 +1,6 @@
-package com.cak.mcsu.lang;
+package com.cak.mcsu.games.koth;
 
 import com.cak.mcmg.core.util.Text;
-import com.cak.mcsu.players.KingOfTheHillPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 

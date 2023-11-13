@@ -1,4 +1,4 @@
-package com.cak.mcsu.lang;
+package com.cak.mcsu.games.blocksumo;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;

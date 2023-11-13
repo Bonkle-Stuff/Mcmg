@@ -78,6 +78,7 @@ public abstract class Game {
   /**Eliminate the player as they left the game*/
   public void handlePlayerLeft(McsuPlayer mcsuPlayer) {
     if (ActiveGame.getAlivePlayers().contains(mcsuPlayer) && ActiveGame.hasStarted()) {
+      ActiveGame.eliminatePlayer(mcsuPlayer);
       mcsuPlayer.toBukkit().setGameMode(GameMode.SPECTATOR);
     }
   }

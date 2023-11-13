@@ -1,4 +1,4 @@
-package com.cak.mcsu.players;
+package com.cak.mcsu.games.koth;
 
 import com.cak.mcmg.core.McsuPlayer;
 import com.cak.mcmg.core.game.functions.Respawns;

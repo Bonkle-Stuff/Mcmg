@@ -69,7 +69,7 @@ public class MapConfigLoader {
       return;
     }
     
-    if (!configFile.getName().substring(configFile.getName().indexOf(".")).equals(gameId + "-" + id)) {
+    if (configFile.getName().substring(configFile.getName().indexOf(".")).equals(gameId + "-" + id)) {
       Main.warn(">> Name mismatch with '" + configFile.getName() + "' and game id '" + gameId + "', map id '" + id + "'");
     }
     

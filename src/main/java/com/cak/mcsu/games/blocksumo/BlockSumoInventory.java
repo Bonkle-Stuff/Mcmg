@@ -1,4 +1,4 @@
-package com.cak.mcsu.inventories;
+package com.cak.mcsu.games.blocksumo;
 
 import com.cak.mcmg.core.McsuPlayer;
 import com.cak.mcmg.core.game.GameInventory;

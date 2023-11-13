@@ -1,6 +1,5 @@
-package com.cak.mcsu.games;
+package com.cak.mcsu.games.blocksumo;
 
-import com.cak.mcmg.core.McsuPlayer;
 import com.cak.mcmg.core.TimedEvent;
 import com.cak.mcmg.core.config.ConfigUtils;
 import com.cak.mcmg.core.eventhandler.ActivityRule;
@@ -12,13 +11,8 @@ import com.cak.mcmg.core.game.helpers.BuildLimitBypass;
 import com.cak.mcmg.core.scoreboard.PlayerScoreboard;
 import com.cak.mcmg.core.scoreboard.PrefixProvider;
 import com.cak.mcmg.core.util.LootTable;
-import com.cak.mcsu.inventories.BlockSumoInventory;
-import com.cak.mcsu.lang.BlockSumoLang;
-import com.cak.mcsu.loottables.BlockSumoLoot;
-import com.cak.mcsu.players.BlockSumoPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.TitlePart;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -196,15 +190,6 @@ public class BlockSumo extends Game {
           )
         )
     );
-  }
-  
-  @Override
-  public void handlePlayerLeft(McsuPlayer player) {
-    super.handlePlayerLeft(player);
-    if (ActiveGame.getAlivePlayers().contains(player) && ActiveGame.hasStarted()) {
-      player.toBukkit().setGameMode(GameMode.SPECTATOR);
-      playerHelper.getPlayer(player).setLives(0);
-    }
   }
   
 }

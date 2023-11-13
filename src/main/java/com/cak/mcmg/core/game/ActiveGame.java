@@ -138,6 +138,7 @@ public class ActiveGame {
     Player bukkitPlayer = player.toBukkit();
     bukkitPlayer.setHealth(Objects.requireNonNull(bukkitPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
     bukkitPlayer.setSaturation(1);
+    bukkitPlayer.setFoodLevel(20);
     bukkitPlayer.getInventory().clear();
     bukkitPlayer.setGameMode(GameMode.SURVIVAL);
   }
