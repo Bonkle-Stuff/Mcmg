@@ -1,5 +1,5 @@
 name: Mcsu
-version: '3.a.4'
+version: '3.4.2-alpha'
 main: com.cak.mcmg.Main
 api-version: 1.19
 commands:
