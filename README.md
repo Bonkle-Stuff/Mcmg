@@ -8,11 +8,11 @@ Games have gamestates, these can be ones such as lobby, active (during the game)
 
 This means you will have
 
-> Create Lobby Game State
+`> Create Lobby Game State
 -> Returns a new instance of a lobby game state
 > Create Active Game State
 -> Returns a new instance of a active game state
 > Create Game States
--> Returns a list of new instances of a any other game state
+-> Returns a list of new instances of a any other game state`
 
 All of these are called once at init, and any gamestates registered after this are regarded as temporary, and are removed after the game is finished
